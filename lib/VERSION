@@ -1,0 +1,22 @@
+
+Version information list :
+
+iniparser :
+Code base : https://github.com/ndevilla/iniparser
+Version   : 3.1
+
+
+nanomsg :
+Code base : https://github.com/nanomsg/nanomsg
+Version   : 0.8
+
+
+utils/list.h :
+Code base    : https://git.kernel.org/
+Version      : 4.0
+
+
+utils/rbtree.* :
+Code base      : https://git.kernel.org/
+Version        : linux-2.6.11.10
+

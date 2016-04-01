@@ -1,0 +1,17 @@
+#environment variable
+AM_BUILD_TOP=$PWD
+AM_CC=gcc
+AM_CXX=g++
+AM_AR=ar
+AM_LD=ld
+AM_STRIP=strip
+PATH=${AM_BUILD_TOP}/target/bin:${PATH}
+
+#export
+export AM_BUILD_TOP
+export AM_CC
+export AM_CXX
+export AM_AR
+export AM_LD
+export AM_STRIP
+export PATH
