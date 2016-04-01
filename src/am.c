@@ -1,5 +1,5 @@
 /*
- * am.c : main processdure
+ * am.c : main processdure, deal with asyncmsg structures
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Library General Public
@@ -189,7 +189,7 @@ static void *__am_input_routine(void *arg)
     am->data = (char *)calloc(sizeof(char), BUF_SIZE);
     while (1) {
         /*always clear data*/
-        if ((am == NULL) || (am->data == NULL)) {
+        if (unlikely(am == NULL) || unlikely(am->data == NULL)) {
             am_log_warn("am maybe released\n");
             break;
         }
@@ -197,7 +197,7 @@ static void *__am_input_routine(void *arg)
 
         /*TODO how to check data is complete*/
         ret = nn_recv(am->input.sock, am->data, BUF_SIZE, 0);
-        if (ret == -1) {
+        if (unlikely(ret == -1)) {
             am_log_warn("am [%s : %s]nn_recv ret : %d, errno = %d\n", am->input.section, am->input.addr, ret, errno);
             if (errno == EBADF)
                 break;
@@ -210,7 +210,7 @@ static void *__am_input_routine(void *arg)
         /*why check twice ?*/
         /*nn_recv maybe block for a long time, and this is a multi-thread case*/
         /*take care !!!*/
-        if ((am != NULL) || (am->data != NULL)) {
+        if (unlikely(am != NULL) || unlikely(am->data != NULL)) {
             /* am_log_info("nn_recv : %s\n", am->data); */
 #ifdef INPROC
             ret = nn_send(am->transfer_sock, am->data, ret, 0);

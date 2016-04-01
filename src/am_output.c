@@ -265,13 +265,14 @@ int am_output_send_msg(asyncmsg_t *am, const void *data, int size, int flag)
     am_output_t *out = NULL;
     int ret = 0;
 
-    if (am->input.sock < 0) {
+    if (unlikely(am->input.sock < 0)) {
         am_log_warn("am section %s is releasing...\n", am->input.section);
         return 0;
     }
 
+    pthread_mutex_lock(&am->mutex);
     list_for_each_entry(out, &am->output_list, list) {
-        if (out->sock < 0) {
+        if (unlikely(out->sock < 0)) {
             am_log_warn("am output sock invalid\n");
             continue;
         }
@@ -285,6 +286,7 @@ int am_output_send_msg(asyncmsg_t *am, const void *data, int size, int flag)
             continue;
         }
     }
+    pthread_mutex_unlock(&am->mutex);
 
     return 0;
 }
