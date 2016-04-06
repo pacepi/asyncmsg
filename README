@@ -47,3 +47,8 @@ SIGUSR1 : reload input config file. Ex, kill -10 PID.
 SIGUSR2 : reload output config file. Ex, kill -12 PID.
 SIGCHLD : show current status. Ex, kill -17 PID.
  ********************************************************************************************/
+
+/********************************************************************************************
+TODO : may need permission controlling. 
+       I'd like to generate a script and use iptables. Any better ideas ?
+ ********************************************************************************************/
