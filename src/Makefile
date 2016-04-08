@@ -17,7 +17,7 @@ LIBRARY=libasyncmsg.a
 
 INC_DIR=-I$(AM_BUILD_TOP)/target/inc
 LIB_DIR=-L$(AM_BUILD_TOP)/target/lib
-LIBS=-liniparser -lnanomsg -ldl -lanl -lpthread
+LIBS=-liniparser -lnanomsg -ldl -lanl -lpthread -lrt
 CFLAGS= -O2 -Wall -rdynamic -Wformat-security -g -fPIC
 ARFLAGS=-rv
 
