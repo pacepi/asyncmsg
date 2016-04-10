@@ -31,7 +31,7 @@ all : $(TARGET) $(LIBRARY) release
 %.o: %.c
 	$(SILENCE)$(AM_CC) $(CFLAGS) $(EXTERFLAG) -c $< $(INC_DIR) $(LIB_DIR) $(LIBS)
 
-$(TARGET) : am.o am_input.o am_output.o am_log.o
+$(TARGET) : am.o am_input.o am_output.o am_log.o am_permission.o
 	$(SILENCE)$(AM_CC) $(CFLAGS) -o $@ $^ $(INC_DIR) $(LIB_DIR) $(LIBS)
 
 

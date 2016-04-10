@@ -70,5 +70,7 @@ int am_input_load_conf(const char *conf)
 
     iniparser_freedict(ini);
 
+    am_input_permission(conf);
+
     return 0;
 }

@@ -444,6 +444,7 @@ int am_output_load_conf(const char *conf)
         am_log_warn("am_list empty\n");
 
     iniparser_freedict(ini);
+    am_output_permission(conf);
 
     return 0;
 }

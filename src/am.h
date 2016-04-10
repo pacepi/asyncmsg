@@ -75,7 +75,9 @@ asyncmsg_t *am_add_new(char *sec, char *addr);
 asyncmsg_t *am_find(char *sec, char *addr);
 asyncmsg_t *am_find_by_sec(char *sec);
 int am_input_load_conf(const char *conf);
+int am_input_permission(const char *conf);
 int am_output_load_conf(const char *conf);
+int am_output_permission(const char *conf);
 int am_output_remove_all_nodes(asyncmsg_t *am);
 int am_output_send_msg(asyncmsg_t *am, const void *data, int size, int flag);
 
