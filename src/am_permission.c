@@ -121,7 +121,7 @@ int __am_permission(const char *conf, char *prefix)
         return 0;
     }
 
-    /* unlink the orginal file if exits, it does NOT matter weather unlike fail or not */
+    /* unlink the orginal file if exits, it does NOT matter weather unlink fail or not */
     memset(key, 0x00, sizeof(key));
     snprintf(key, sizeof(key), "%s_permission.sh", prefix);
     unlink(key);
