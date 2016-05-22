@@ -114,20 +114,21 @@ static void *__am_output_routine(void *arg)
 
     out->data = (char *)calloc(sizeof(char), BUF_SIZE);
     while (1) {
-        if ((out == NULL) || (out->data == NULL)) {
+        if (unlikely((out == NULL) || (out->data == NULL))) {
             am_log_warn("am_output maybe released\n");
             break;
         }
 
         /*always clear data*/
-        memset(out->data, 0x00, ret);
+        if (likely((ret > 0) && (ret <= BUF_SIZE)))
+            memset(out->data, 0x00, ret);
         /*TODO how to check data is complete*/
-        if (out->transfer_sock >= 0)
+        if (likely(out->transfer_sock >= 0))
             ret = nn_recv(out->transfer_sock, out->data, BUF_SIZE, 0);
         else
             break;
 
-        if ((ret == -1) && (errno == EBADF)) {
+        if (unlikely((ret == -1) && (errno == EBADF))) {
             am_log_warn("nn_recv ret : %d, errno = %d\n", ret, errno);
             break;
         }
@@ -155,7 +156,7 @@ static void *__am_output_routine(void *arg)
 
 
 /*
- * if output node has been linked in output list ?
+ * find output node which has been linked in output list.
  */
 am_output_t *__am_output_find_node(asyncmsg_t *am, const char *addr)
 {
@@ -202,7 +203,8 @@ am_output_t *__am_output_new_node(asyncmsg_t *am, const char *addr)
 
 
 /*
- * output node has alread been built ?
+ * setup output node.
+ * if this node has already built, do nothing.
  */
 int __am_output_setup_node(asyncmsg_t *am, const char *addr)
 {
@@ -218,7 +220,7 @@ int __am_output_setup_node(asyncmsg_t *am, const char *addr)
 
 
 /*
- * remove all output nodes which are linked in am
+ * remove all output nodes which are linked in am.
  */
 int am_output_remove_all_nodes(asyncmsg_t *am)
 {
@@ -258,7 +260,7 @@ int am_output_remove_all_nodes(asyncmsg_t *am)
 
 
 /*
- * send data to all of the output nodes
+ * send data to all of the output nodes.
  */
 int am_output_send_msg(asyncmsg_t *am, const void *data, int size, int flag)
 {
