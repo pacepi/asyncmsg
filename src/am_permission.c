@@ -18,6 +18,7 @@
  */
 
 
+#define _GNU_SOURCE
 #include "am.h"
 #include "am_log.h"
 #include "iniparser/iniparser.h"
@@ -46,32 +47,57 @@ int __am_permission_generate(int fd, int port, char *allowhost, char *prefix)
     /* write some info */
     memset(command, 0x00, sizeof(command));
     snprintf(command, sizeof(command), "#start configurarion %s\n", chain);
-    write(fd, command, strlen(command));
+    ret = write(fd, command, strlen(command));
+    if (ret < 0) {
+        am_log_error("write %s fail\n", command);
+        return -errno;
+    }
 
     /* do Not jump to the old chain, may fail */
     memset(command, 0x00, sizeof(command));
     snprintf(command, sizeof(command), "iptables -D INPUT -t filter -p tcp --dport %d -j %s\n", port, chain);
-    write(fd, command, strlen(command));
+    ret = write(fd, command, strlen(command));
+    if (ret < 0) {
+        am_log_error("write %s fail\n", command);
+        return -errno;
+    }
+
 
     /* flush the old chain, may fail */
     memset(command, 0x00, sizeof(command));
     snprintf(command, sizeof(command), "iptables -F %s\n", chain);
-    write(fd, command, strlen(command));
+    ret = write(fd, command, strlen(command));
+    if (ret < 0) {
+        am_log_error("write %s fail\n", command);
+        return -errno;
+    }
 
     /* remove the old chain, may fail */
     memset(command, 0x00, sizeof(command));
     snprintf(command, sizeof(command), "iptables -X %s\n", chain);
-    write(fd, command, strlen(command));
+    ret = write(fd, command, strlen(command));
+    if (ret < 0) {
+        am_log_error("write %s fail\n", command);
+        return -errno;
+    }
 
     /* add the chain*/
     memset(command, 0x00, sizeof(command));
     snprintf(command, sizeof(command), "iptables -N %s\n", chain);
-    write(fd, command, strlen(command));
+    ret = write(fd, command, strlen(command));
+    if (ret < 0) {
+        am_log_error("write %s fail\n", command);
+        return -errno;
+    }
 
     /* jump to the new chain */
     memset(command, 0x00, sizeof(command));
     snprintf(command, sizeof(command), "iptables -A INPUT -t filter -p tcp --dport %d -j %s\n", port, chain);
-    write(fd, command, strlen(command));
+    ret = write(fd, command, strlen(command));
+    if (ret < 0) {
+        am_log_error("write %s fail\n", command);
+        return -errno;
+    }
 
     for (hosts = allowhost; ; hosts = NULL) {
         host = strtok(hosts, ",");
@@ -80,17 +106,29 @@ int __am_permission_generate(int fd, int port, char *allowhost, char *prefix)
         /* add allowhost rules to new chain */
         memset(command, 0x00, sizeof(command));
         snprintf(command, sizeof(command), "iptables -A %s -s %s -j ACCEPT\n", chain, host);
-        write(fd, command, strlen(command));
+        ret = write(fd, command, strlen(command));
+        if (ret < 0) {
+            am_log_error("write %s fail\n", command);
+            return -errno;
+        }
     }
 
     /* other host DROP */
     memset(command, 0x00, sizeof(command));
     snprintf(command, sizeof(command), "iptables -A %s -j DROP\n", chain);
-    write(fd, command, strlen(command));
+    ret = write(fd, command, strlen(command));
+    if (ret < 0) {
+        am_log_error("write %s fail\n", command);
+        return -errno;
+    }
 
     memset(command, 0x00, sizeof(command));
     snprintf(command, sizeof(command), "#end configurarion %s\n\n", chain);
-    write(fd, command, strlen(command));
+    ret = write(fd, command, strlen(command));
+    if (ret < 0) {
+        am_log_error("write %s fail\n", command);
+        return -errno;
+    }
 
     /* do Not jump to the old chain, may fail */
     return 0;

@@ -52,7 +52,7 @@ clean :
 
 
 astyle :
-	$(SILENCE)git status | grep .c | awk '{print $$ 2}' | xargs astyle
+	$(SILENCE)git status | grep "\.c" | awk '{print $$ 2}' | xargs astyle
 	$(SILENCE)find -name "*.c.orig" | xargs rm
 
 
