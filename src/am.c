@@ -328,11 +328,7 @@ static void init_cmdline(int argc, char *argv[])
             break;
 
         case 'd' :
-            if (optarg)
-                if_daemon = !!atoi(optarg);
-
-            else
-                usage();
+            if_daemon = 1;
 
             break;
 
